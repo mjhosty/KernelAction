@@ -5,7 +5,7 @@
       "vendor": "xiaomi",
       "name": "MoonWake-Vanilla",
       "defconfig": "ruby_defconfig",
-      "extraConfig": "vendor/bbr.config vendor/noop.config vendor/kernelpatch.config",
+      "extraConfig": "vendor/bbr.config vendor/noop.config vendor/kernelpatch.config vendor/droidspaces.config",
       "repo": "https://github.com/mjhosty/moonwake_kernel_xiaomi_ruby",
       "branch": "moon"
     },
