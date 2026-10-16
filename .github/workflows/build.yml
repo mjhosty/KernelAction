@@ -206,12 +206,17 @@ jobs:
           ls -la "$GITHUB_WORKSPACE/patches" || true
           echo "Tracked patch files:"
           git -C "$GITHUB_WORKSPACE" ls-tree -r --name-only HEAD | grep '^patches/' || true
-          
+      - name: "Checkout DroidSpaces patches"
+        uses: actions/checkout@v4
+        with:
+          repository: mjhosty/KernelAction
+          ref: main
+          path: .kernelaction-patches
       - name: "Apply DroidSpaces patches"
         working-directory: ${{ env.KERNEL_NAME }}
         run: |
           set -eu
-          PATCH_DIR="${GITHUB_WORKSPACE}/patches"
+          PATCH_DIR="${GITHUB_WORKSPACE}/.kernelaction-patches/patches"
           if [ ! -d "$PATCH_DIR" ]; then
             echo "DroidSpaces patch directory not found: $PATCH_DIR"
             exit 1
