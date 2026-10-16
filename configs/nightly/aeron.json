@@ -6,7 +6,7 @@
       "name": "Aeron-Phoenix",
       "defconfig": "ruby_defconfig",
       "extraConfig": "vendor/kernelsu.config vendor/susfs.config",
-      "repo": "https://github.com/DPR-MoonWake/aeron_kernel_xiaomi_ruby",
+      "repo": "https://github.com/DXRN-MoonWake/aeron_kernel_xiaomi_ruby",
       "branch": "ksu_susfs"
     },
     "output_image": "Image.gz-dtb",
@@ -59,7 +59,7 @@
       }
     },
     "AnyKernel3": {
-      "repo": "https://github.com/DPR-MoonWake/AnyKernel3",
+      "repo": "https://github.com/DXRN-MoonWake/AnyKernel3",
       "branch": "aeron"
     }
   }

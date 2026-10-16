@@ -6,11 +6,11 @@
       "name": "MoonWake-CI-Vanilla",
       "defconfig": "ruby_defconfig",
       "extraConfig": "vendor/bbr.config vendor/noop.config vendor/kernelpatch.config",
-      "repo": "https://github.com/DPR-MoonWake/moonwake_kernel_xiaomi_ruby",
+      "repo": "https://github.com/DXRN-MoonWake/moonwake_kernel_xiaomi_ruby",
       "branch": "experimental"
     },
     "output_image": "Image.gz-dtb",
-    "additional_script_link": "https://github.com/DPR-MoonWake/KernelAction/raw/main/scripts/ci/version-v.sh",
+    "additional_script_link": "https://github.com/DXRN-MoonWake/KernelAction/raw/main/scripts/ci/version-v.sh",
     "additional_post_script_link": "disabled",
     "kp": {
       "use": false,
@@ -59,7 +59,7 @@
       }
     },
     "AnyKernel3": {
-      "repo": "https://github.com/DPR-MoonWake/AnyKernel3",
+      "repo": "https://github.com/DXRN-MoonWake/AnyKernel3",
       "branch": "ruby_dev"
     }
   },
@@ -70,18 +70,18 @@
       "name": "MoonWake-CI-KernelSU",
       "defconfig": "ruby_defconfig",
       "extraConfig": "vendor/bbr.config vendor/noop.config vendor/kernelpatch.config vendor/kernelsu.config",
-      "repo": "https://github.com/DPR-MoonWake/moonwake_kernel_xiaomi_ruby",
+      "repo": "https://github.com/DXRN-MoonWake/moonwake_kernel_xiaomi_ruby",
       "branch": "experimental"
     },
     "output_image": "Image.gz-dtb",
-    "additional_script_link": "https://github.com/DPR-MoonWake/KernelAction/raw/main/scripts/ci/version-k.sh",
+    "additional_script_link": "https://github.com/DXRN-MoonWake/KernelAction/raw/main/scripts/ci/version-k.sh",
     "kp": {
       "use": false,
       "kpimg_link": ""
     },
     "kernelsu": {
       "enable": true,
-      "setupLink": "https://raw.githubusercontent.com/XDL-MoonWake/KernelSU-Next/refs/heads/legacy-susfs-v2/kernel/setup.sh",
+      "setupLink": "https://raw.githubusercontent.com/DXRN-MoonWake/KernelAction/refs/heads/main/scripts/kernelsu_setups/ksun.sh",
       "setupArg": "legacy-susfs-v2",
       "setupName": "KernelSU-Next",
       "needPatch": false,
@@ -122,7 +122,7 @@
       }
     },
     "AnyKernel3": {
-      "repo": "https://github.com/DPR-MoonWake/AnyKernel3",
+      "repo": "https://github.com/DXRN-MoonWake/AnyKernel3",
       "branch": "ruby_dev"
     }
   },
@@ -133,18 +133,18 @@
       "name": "MoonWake-CI-KernelSU-SuSFS",
       "defconfig": "ruby_defconfig",
       "extraConfig": "vendor/bbr.config vendor/noop.config vendor/kernelpatch.config vendor/kernelsu.config vendor/susfs.config",
-      "repo": "https://github.com/DPR-MoonWake/moonwake_kernel_xiaomi_ruby",
+      "repo": "https://github.com/DXRN-MoonWake/moonwake_kernel_xiaomi_ruby",
       "branch": "experimental"
     },
     "output_image": "Image.gz-dtb",
-    "additional_script_link": "https://github.com/DPR-MoonWake/KernelAction/raw/main/scripts/ci/version-ksf.sh",
+    "additional_script_link": "https://github.com/DXRN-MoonWake/KernelAction/raw/main/scripts/ci/version-ksf.sh",
     "kp": {
       "use": false,
       "kpimg_link": ""
     },
     "kernelsu": {
       "enable": true,
-      "setupLink": "https://raw.githubusercontent.com/XDL-MoonWake/KernelSU-Next/refs/heads/legacy-susfs-v2/kernel/setup.sh",
+      "setupLink": "https://raw.githubusercontent.com/DXRN-MoonWake/KernelAction/refs/heads/main/scripts/kernelsu_setups/ksun.sh",
       "setupArg": "legacy-susfs-v2",
       "setupName": "KernelSU-Next",
       "needPatch": false,
@@ -185,7 +185,7 @@
       }
     },
     "AnyKernel3": {
-      "repo": "https://github.com/DPR-MoonWake/AnyKernel3",
+      "repo": "https://github.com/DXRN-MoonWake/AnyKernel3",
       "branch": "ruby_dev"
     }
   },
@@ -196,18 +196,18 @@
       "name": "MoonWake-CI-DEBUG",
       "defconfig": "ruby_defconfig",
       "extraConfig": "vendor/debug.config vendor/bbr.config vendor/kernelpatch.config vendor/noop.config vendor/lru.config vendor/kernelsu.config vendor/susfs.config",
-      "repo": "https://github.com/DPR-MoonWake/moonwake_kernel_xiaomi_ruby",
+      "repo": "https://github.com/DXRN-MoonWake/moonwake_kernel_xiaomi_ruby",
       "branch": "experimental"
     },
     "output_image": "Image.gz-dtb",
-    "additional_script_link": "https://github.com/DPR-MoonWake/KernelAction/raw/main/scripts/ci/version-debug.sh",
+    "additional_script_link": "https://github.com/DXRN-MoonWake/KernelAction/raw/main/scripts/ci/version-debug.sh",
     "kp": {
       "use": false,
       "kpimg_link": ""
     },
     "kernelsu": {
       "enable": true,
-      "setupLink": "https://raw.githubusercontent.com/XDL-MoonWake/KernelSU-Next/refs/heads/legacy-susfs-v2/kernel/setup.sh",
+      "setupLink": "https://raw.githubusercontent.com/DXRN-MoonWake/KernelAction/refs/heads/main/scripts/kernelsu_setups/ksun.sh",
       "setupArg": "legacy-susfs-v2",
       "setupName": "KernelSU-Next",
       "needPatch": false,
@@ -248,7 +248,7 @@
       }
     },
     "AnyKernel3": {
-      "repo": "https://github.com/DPR-MoonWake/AnyKernel3",
+      "repo": "https://github.com/DXRN-MoonWake/AnyKernel3",
       "branch": "ruby_dev"
     }
   }

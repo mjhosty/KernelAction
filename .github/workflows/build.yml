@@ -551,8 +551,8 @@ jobs:
 
             📄 **Notes:**
             - You're RESPONSIBLE for EVERY DAMAGE, if you flash this ${{ github.event.inputs.config_type }} build.
-            - [Step to flash MoonWake in AOSP](https://github.com/DPR-MoonWake/moonwake_kernel_xiaomi_ruby/wiki/Flash-MoonWake-on-AOSP)
-            - [Step to flash MoonWake in HyperOS/MIUI](https://github.com/DPR-MoonWake/moonwake_kernel_xiaomi_ruby/wiki/Flash-MoonWake-on-MIUI-HyperOS)
+            - [Step to flash MoonWake in AOSP](https://github.com/DXRN-MoonWake/moonwake_kernel_xiaomi_ruby/wiki/Flash-MoonWake-on-AOSP)
+            - [Step to flash MoonWake in HyperOS/MIUI](https://github.com/DXRN-MoonWake/moonwake_kernel_xiaomi_ruby/wiki/Flash-MoonWake-on-MIUI-HyperOS)
           files: ${{ env.KERNEL_BUILD_LIST }}
         env:
           API_ID: ${{ secrets.TELEGRAM_API_ID }}
