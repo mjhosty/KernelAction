@@ -48,17 +48,6 @@ jobs:
       repos: ${{ steps.generate-matrix.outputs.repos }}
       builddate: ${{ steps.generate-builddate.outputs.builddate }}
     steps:
-      - name: "Debug patch directory"
-        run: |
-          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
-          echo "GITHUB_REF=$GITHUB_REF"
-          echo "GITHUB_SHA=$GITHUB_SHA"
-          echo "Workspace contents:"
-          ls -la "$GITHUB_WORKSPACE"
-          echo "Patch directory contents:"
-          ls -la "$GITHUB_WORKSPACE/patches" || true
-          echo "Tracked patch files:"
-          git -C "$GITHUB_WORKSPACE" ls-tree -r --name-only HEAD | grep '^patches/' || true
       - name: "Checkout"
         uses: actions/checkout@v3
       - name: "Generate Matrix from config"
@@ -206,6 +195,18 @@ jobs:
           echo "KERNEL_COMMIT_HASH=$(git -C $KERNEL_NAME rev-parse HEAD)" >> $GITHUB_OUTPUT
           echo "KERNEL_COMMIT_HASH=$(git -C $KERNEL_NAME rev-parse HEAD)" >> $GITHUB_OUTPUT
 
+      - name: "Debug patch directory"
+        run: |
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          echo "GITHUB_REF=$GITHUB_REF"
+          echo "GITHUB_SHA=$GITHUB_SHA"
+          echo "Workspace contents:"
+          ls -la "$GITHUB_WORKSPACE"
+          echo "Patch directory contents:"
+          ls -la "$GITHUB_WORKSPACE/patches" || true
+          echo "Tracked patch files:"
+          git -C "$GITHUB_WORKSPACE" ls-tree -r --name-only HEAD | grep '^patches/' || true
+          
       - name: "Apply DroidSpaces patches"
         working-directory: ${{ env.KERNEL_NAME }}
         run: |
