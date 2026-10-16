@@ -194,6 +194,38 @@ jobs:
           echo "Clone kernel source => ($KERNEL_REPO)"
           echo "KERNEL_COMMIT_HASH=$(git -C $KERNEL_NAME rev-parse HEAD)" >> $GITHUB_OUTPUT
           echo "KERNEL_COMMIT_HASH=$(git -C $KERNEL_NAME rev-parse HEAD)" >> $GITHUB_OUTPUT
+
+      - name: "Apply DroidSpaces patches"
+        working-directory: ${{ env.KERNEL_NAME }}
+        run: |
+          set -eu
+          PATCH_DIR="${GITHUB_WORKSPACE}/patches"
+          if [ ! -d "$PATCH_DIR" ]; then
+            echo "DroidSpaces patch directory not found: $PATCH_DIR"
+            exit 1
+          fi
+          
+          found=0
+          
+          for patchfile in "$PATCH_DIR"/*.patch; do
+            [ -f "$patchfile" ] || continue
+            found=1
+
+            echo "Checking patch: $(basename "$patchfile")"
+            patch --dry-run -p1 < "$patchfile"
+
+            echo "Applying patch: $(basename "$patchfile")"
+            patch -p1 < "$patchfile"
+          done
+          
+          if [ "$found" -eq 0 ]; then
+            echo "No .patch files found."
+            exit 1
+          fi
+
+          git diff --check
+          git diff --stat
+          
       - name: "Get toolchains"
         env:
           toolchains: "${{ toJSON(matrix.repos.toolchains) }}"
