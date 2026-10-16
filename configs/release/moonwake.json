@@ -6,11 +6,11 @@
       "name": "MoonWake-Vanilla",
       "defconfig": "ruby_defconfig",
       "extraConfig": "vendor/bbr.config vendor/noop.config vendor/kernelpatch.config",
-      "repo": "https://github.com/DXRN-MoonWake/moonwake_kernel_xiaomi_ruby",
+      "repo": "https://github.com/mjhosty/moonwake_kernel_xiaomi_ruby",
       "branch": "moon"
     },
     "output_image": "Image.gz-dtb",
-    "additional_script_link": "https://github.com/DXRN-MoonWake/KernelAction/raw/main/scripts/release/version-v.sh",
+    "additional_script_link": "https://github.com/mjhosty/KernelAction/raw/main/scripts/release/version-v.sh",
     "additional_post_script_link": "disabled",
     "kp": {
       "use": false,
@@ -74,7 +74,7 @@
       "branch": "moon"
     },
     "output_image": "Image.gz-dtb",
-    "additional_script_link": "https://github.com/DXRN-MoonWake/KernelAction/raw/main/scripts/release/version-k.sh",
+    "additional_script_link": "https://github.com/mjhosty/KernelAction/raw/main/scripts/release/version-k.sh",
     "additional_post_script_link": "disabled",
     "kp": {
       "use": false,
@@ -82,7 +82,7 @@
     },
     "kernelsu": {
       "enable": true,
-      "setupLink": "https://raw.githubusercontent.com/DXRN-MoonWake/KernelAction/refs/heads/main/scripts/kernelsu_setups/ksun.sh",
+      "setupLink": "https://raw.githubusercontent.com/mjhosty/KernelAction/refs/heads/main/scripts/kernelsu_setups/ksun.sh",
       "setupArg": "legacy-susfs-v2",
       "setupName": "KernelSU-Next",
       "needPatch": false,
@@ -138,7 +138,7 @@
       "branch": "moon"
     },
     "output_image": "Image.gz-dtb",
-    "additional_script_link": "https://github.com/DXRN-MoonWake/KernelAction/raw/main/scripts/release/version-ksf.sh",
+    "additional_script_link": "https://github.com/mjhosty/KernelAction/raw/main/scripts/release/version-ksf.sh",
     "additional_post_script_link": "disabled",
     "kp": {
       "use": false,
@@ -146,7 +146,7 @@
     },
     "kernelsu": {
       "enable": true,
-      "setupLink": "https://raw.githubusercontent.com/DXRN-MoonWake/KernelAction/refs/heads/main/scripts/kernelsu_setups/ksun.sh",
+      "setupLink": "https://raw.githubusercontent.com/mjhosty/KernelAction/refs/heads/main/scripts/kernelsu_setups/ksun.sh",
       "setupArg": "legacy-susfs-v2",
       "setupName": "KernelSU-Next",
       "needPatch": false,
