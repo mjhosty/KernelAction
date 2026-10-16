@@ -70,7 +70,7 @@
       "name": "MoonWake-KernelSU",
       "defconfig": "ruby_defconfig",
       "extraConfig": "vendor/bbr.config vendor/noop.config vendor/kernelsu.config vendor/kernelpatch.config",
-      "repo": "https://github.com/DXRN-MoonWake/moonwake_kernel_xiaomi_ruby",
+      "repo": "https://github.com/mjhosty/moonwake_kernel_xiaomi_ruby",
       "branch": "moon"
     },
     "output_image": "Image.gz-dtb",
@@ -134,7 +134,7 @@
       "name": "MoonWake-KernelSU-SuSFS",
       "defconfig": "ruby_defconfig",
       "extraConfig": "vendor/bbr.config vendor/noop.config vendor/kernelsu.config vendor/susfs.config vendor/kernelpatch.config",
-      "repo": "https://github.com/DXRN-MoonWake/moonwake_kernel_xiaomi_ruby",
+      "repo": "https://github.com/mjhosty/moonwake_kernel_xiaomi_ruby",
       "branch": "moon"
     },
     "output_image": "Image.gz-dtb",
