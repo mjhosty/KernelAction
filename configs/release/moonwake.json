@@ -197,7 +197,7 @@
       "vendor": "xiaomi",
       "name": "MoonWake-KernelSU-SuSFS-Droidspaces-OSS",
       "defconfig": "ruby_defconfig",
-      "extraConfig": "vendor/bbr.config vendor/noop.config vendor/kernelsu.config vendor/susfs.config vendor/kernelpatch.config vendor/droidspaces.config",
+      "extraConfig": "vendor/bbr.config vendor/noop.config vendor/kernelsu.config vendor/susfs.config vendor/kernelpatch.config vendor/droidspaces.config vendor/droidspaces-mali.config",
       "repo": "https://github.com/mjhosty/moonwake_kernel_xiaomi_ruby",
       "branch": "moon"
     },
