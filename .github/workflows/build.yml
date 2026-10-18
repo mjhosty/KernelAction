@@ -433,6 +433,28 @@ jobs:
             grep --line-buffered --color=always -E \
             'warning:|error:|undefined reference|No rule to make target|KernelSU|SUSFS|LTO|MODPOST|VMLINUX|^[[:space:]]*(GEN|KSYM|SORTEX|SYSMAP|OBJCOPY|GZIP|DTC|CAT)\b'
           echo "Build finished!"
+
+          
+      - name: "Build modules"
+        working-directory: ${{ env.KERNEL_NAME }}
+        env:
+          args: ${{ steps.generate-args.outputs.args }}
+        run: |
+          make ${{ env.args }} modules
+
+      - name: "Collect vgem module"
+        run: |
+          mkdir -p modules_out
+          find "${{ env.OUT_DIR }}" -name 'vgem.ko' -exec cp -v {} modules_out/ \;
+          ls -l modules_out
+
+      - name: "Upload modules"
+        uses: actions/upload-artifact@v4
+        with:
+          name: "modules-${{ env.KERNEL_NAME }}-${{ github.run_number }}"
+          path: ./modules_out
+
+          
       - name: "Run Additional Script"
         working-directory: ${{ env.KERNEL_NAME }}
         if: ${{ env.additional_post_script_link != 'disabled' }}
