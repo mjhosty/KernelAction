@@ -1,0 +1,105 @@
+mali_kbase: r32p1: import dma-bufs that were not made by ION
+
+With CONFIG_MTK_IOMMU_V2 every imported dma-buf was passed to
+ion_import_dma_buf(), which refuses buffers from any other exporter
+("can not import dmabuf from another exporter"). kbase_mem_from_umm()
+then returned NULL, the ioctl failed with ENOMEM, and Vulkan reported
+VK_ERROR_OUT_OF_HOST_MEMORY. Buffers from /dev/dma_heap/system
+(system_heap_lite) and vgem could therefore never be imported, which
+breaks memory export emulation in containers (Droidspaces-Mali).
+
+Only treat -EINVAL (not an ION buffer) as "no ion handle" and import the
+buffer as a plain dma-buf. The M4U port configuration is skipped when
+there is no ion handle. Every other error still fails the import as
+before. GPU page tables are built from sg_phys(), so no IOMMU mapping is
+involved for these buffers.
+
+diff --git a/drivers/gpu/mediatek/gpu_mali/mali_valhall/mali-r32p1/drivers/gpu/arm/midgard/mali_kbase_mem_linux.c b/drivers/gpu/mediatek/gpu_mali/mali_valhall/mali-r32p1/drivers/gpu/arm/midgard/mali_kbase_mem_linux.c
+index b7672b0e5..a8d6f3135 100644
+--- a/drivers/gpu/mediatek/gpu_mali/mali_valhall/mali-r32p1/drivers/gpu/arm/midgard/mali_kbase_mem_linux.c
++++ b/drivers/gpu/mediatek/gpu_mali/mali_valhall/mali-r32p1/drivers/gpu/arm/midgard/mali_kbase_mem_linux.c
+@@ -1185,26 +1185,33 @@ static int kbase_mem_umm_map_attachment(struct kbase_context *kctx,
+ #if IS_ENABLED(CONFIG_MTK_IOMMU_V2)
+ 	mutex_lock(&ion_config_lock);
+ 
+-	mm_data.mm_cmd = ION_MM_CONFIG_BUFFER;
+-	mm_data.config_buffer_param.kernel_handle =
+-			alloc->imported.umm.ion_handle;
+-	mm_data.config_buffer_param.module_id = M4U_PORT_GPU;
+-	mm_data.config_buffer_param.security = 0;
+-	mm_data.config_buffer_param.coherent = 0;
++	/*
++	 * A dma-buf from a non-ION exporter (for example a dma-heap buffer
++	 * allocated inside a container) has no ion handle and nothing to
++	 * configure for the GPU port. It is mapped as a plain dma-buf.
++	 */
++	if (alloc->imported.umm.ion_handle) {
++		mm_data.mm_cmd = ION_MM_CONFIG_BUFFER;
++		mm_data.config_buffer_param.kernel_handle =
++				alloc->imported.umm.ion_handle;
++		mm_data.config_buffer_param.module_id = M4U_PORT_GPU;
++		mm_data.config_buffer_param.security = 0;
++		mm_data.config_buffer_param.coherent = 0;
+ 
+ retry:
+-	err = ion_kernel_ioctl(kctx->kbdev->client,
+-			ION_CMD_MULTIMEDIA, (unsigned long)&mm_data);
++		err = ion_kernel_ioctl(kctx->kbdev->client,
++				ION_CMD_MULTIMEDIA, (unsigned long)&mm_data);
+ 
+-	if (err == -ION_ERROR_CONFIG_CONFLICT && retry_cnt < 1000) {
+-		retry_cnt++;
+-		goto retry;
+-	} else if (err) {
+-		dev_warn(kctx->kbdev->dev,
+-				"fail to config ion buffer, err=%d, retry_cnt %d\n",
+-				err, retry_cnt);
+-		mutex_unlock(&ion_config_lock);
+-		return -EINVAL;
++		if (err == -ION_ERROR_CONFIG_CONFLICT && retry_cnt < 1000) {
++			retry_cnt++;
++			goto retry;
++		} else if (err) {
++			dev_warn(kctx->kbdev->dev,
++					"fail to config ion buffer, err=%d, retry_cnt %d\n",
++					err, retry_cnt);
++			mutex_unlock(&ion_config_lock);
++			return -EINVAL;
++		}
+ 	}
+ #endif
+ 
+@@ -1558,11 +1565,20 @@ static struct kbase_va_region *kbase_mem_from_umm(struct kbase_context *kctx,
+ 	ion_handle = ion_import_dma_buf(kctx->kbdev->client, dma_buf);
+ 
+ 	if (IS_ERR(ion_handle)) {
+-		dev_warn(kctx->kbdev->dev, "import ion handle failed!\n");
+-		return NULL;
++		if (PTR_ERR(ion_handle) != -EINVAL) {
++			dev_warn(kctx->kbdev->dev, "import ion handle failed!\n");
++			return NULL;
++		}
++		/*
++		 * -EINVAL means the buffer was not made by ION. Import it
++		 * without an ion handle instead of rejecting it, so buffers
++		 * from other exporters (dma-heap, vgem) can be used.
++		 */
++		ion_handle = NULL;
+ 	}
+ 
+-	reg->gpu_alloc->imported.umm.ion_client = kctx->kbdev->client;
++	reg->gpu_alloc->imported.umm.ion_client =
++			ion_handle ? kctx->kbdev->client : NULL;
+ 	reg->gpu_alloc->imported.umm.ion_handle = ion_handle;
+ #endif
+ 
+@@ -1574,7 +1590,8 @@ static struct kbase_va_region *kbase_mem_from_umm(struct kbase_context *kctx,
+ 		err = kbase_mem_umm_map_attachment(kctx, reg);
+ 		if (err) {
+ #if IS_ENABLED(CONFIG_MTK_IOMMU_V2)
+-			ion_free(kctx->kbdev->client, ion_handle);
++			if (ion_handle)
++				ion_free(kctx->kbdev->client, ion_handle);
+ 			ion_handle = NULL;
+ #endif
+ 			dev_warn(kctx->kbdev->dev,
