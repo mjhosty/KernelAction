@@ -1,0 +1,37 @@
+drm/vgem: give the platform device real DMA ops on arm64
+
+vgem registers a bare platform device with platform_device_register_simple().
+That device never goes through of_dma_configure(), so arch_setup_dma_ops()
+is never called for it and on arm64 4.19 it keeps dummy_dma_ops, whose
+map_sg always returns 0.
+
+Importing a dma-buf through DRM_IOCTL_PRIME_FD_TO_HANDLE attaches the
+buffer to this device and maps it. With an exporter that calls
+dma_map_sg() (system_heap_lite) the map fails and the import returns
+ENOMEM, which Mesa reports as "zink: failed drmPrimeFDToHandle Cannot
+allocate memory". Windows that need a GEM handle for an exported
+buffer then never get one.
+
+Call arch_setup_dma_ops() once, before the DMA mask is set. The device
+has no IOMMU group, so this only installs the standard swiotlb ops.
+
+diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
+index 8920770d1..ec3ccbf8b 100644
+--- a/drivers/gpu/drm/vgem/vgem_drv.c
++++ b/drivers/gpu/drm/vgem/vgem_drv.c
+@@ -450,6 +450,15 @@ static int __init vgem_init(void)
+ 		goto out_free;
+ 	}
+ 
++#ifdef CONFIG_ARM64
++	/*
++	 * A bare platform device never goes through of_dma_configure(), so on
++	 * arm64 it keeps dummy_dma_ops and every dma_map_sg() on it returns 0.
++	 * Importing a dma-buf (drmPrimeFDToHandle) maps it for this device, so
++	 * give the device the normal arm64 ops first.
++	 */
++	arch_setup_dma_ops(&vgem_device->platform->dev, 0, 0, NULL, false);
++#endif
+ 	dma_coerce_mask_and_coherent(&vgem_device->platform->dev,
+ 				     DMA_BIT_MASK(64));
+ 	ret = drm_dev_init(&vgem_device->drm, &vgem_driver,
