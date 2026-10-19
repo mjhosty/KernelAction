@@ -445,7 +445,7 @@ jobs:
       - name: "Collect vgem module"
         run: |
           mkdir -p modules_out
-          find "${{ env.OUT_DIR }}" -name 'vgem.ko' -exec cp -v {} modules_out/ \;
+          find "${{ env.OUT_DIR }}" \( -name vgem.ko -o -name system_heap_lite.ko \) -exec cp -v {} modules_out/ \;
           ls -l modules_out
 
       - name: "Upload modules"
