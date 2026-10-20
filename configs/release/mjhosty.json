@@ -39,7 +39,7 @@
       "KCFLAGS": "-O3 -march=armv8.2-a+crypto+fp16+dotprod -mcpu=cortex-a78 -mtune=cortex-a78",
       "build_out": "Image.gz-dtb",
       "externalCommand": {
-        "KBUILD_BUILD_HOST": "perfc.org",
+        "KBUILD_BUILD_HOST": "github-actions",
         "KBUILD_BUILD_USER": "mjhosty",
         "CROSS_COMPILE": "clang-AOSP/bin/aarch64-linux-gnu-",
         "CROSS_COMPILE_ARM32": "clang-AOSP/bin/arm-linux-gnueabi-",
