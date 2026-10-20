@@ -10,7 +10,7 @@
       "branch": "moon"
     },
     "output_image": "Image.gz-dtb",
-    "additional_script_link": "https://github.com/mjhosty/KernelAction/raw/main/scripts/release/version-ksf.sh",
+    "additional_script_link": "https://github.com/mjhosty/KernelAction/raw/main/scripts/release/version-mjhosty.sh",
     "additional_post_script_link": "disabled",
     "kp": {
       "use": false,
