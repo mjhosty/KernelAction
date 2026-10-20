@@ -40,7 +40,7 @@
       "build_out": "Image.gz-dtb",
       "externalCommand": {
         "KBUILD_BUILD_HOST": "perfc.org",
-        "KBUILD_BUILD_USER": "rainyxeon",
+        "KBUILD_BUILD_USER": "mjhosty",
         "CROSS_COMPILE": "clang-AOSP/bin/aarch64-linux-gnu-",
         "CROSS_COMPILE_ARM32": "clang-AOSP/bin/arm-linux-gnueabi-",
         "LD": "clang-AOSP/bin/ld.lld",
