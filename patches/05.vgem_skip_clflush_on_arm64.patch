@@ -1,0 +1,48 @@
+drm/vgem: don't call drm_clflush_pages() on arm64
+
+vgem_prime_pin() calls drm_clflush_pages() so importers can rely on a
+coherent exported dma-address. That helper only flushes on x86 and
+powerpc. On every other architecture, arm64 included, it just logs
+"Architecture has no drm_cache.c support" and does nothing, so every
+dma-buf export of a vgem object (each frame of a Zink/Wayland window)
+spams the kernel log.
+
+Skip the call there. On arm64 the cache maintenance for the importer is
+done by dma_map_sg() on the device, which gets real DMA ops from
+04.vgem_arm64_dma_ops.patch. n_pages becomes __maybe_unused for the
+configurations that compile the call out.
+
+This is the one hunk of Droidspaces-Mali patches/kernel/0002 (written for
+the 5.15 GKI vgem) that applies to 4.19. Its other hunk, vma_set_file(),
+is not needed: the 4.19 vgem already open codes the vm_file swap.
+
+Independent of 04: the two patches touch different functions and apply in
+either order.
+
+diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
+index 8920770d1..9144a0d3c 100644
+--- a/drivers/gpu/drm/vgem/vgem_drv.c
++++ b/drivers/gpu/drm/vgem/vgem_drv.c
+@@ -287,7 +287,7 @@ static void vgem_unpin_pages(struct drm_vgem_gem_object *bo)
+ static int vgem_prime_pin(struct drm_gem_object *obj)
+ {
+ 	struct drm_vgem_gem_object *bo = to_vgem_bo(obj);
+-	long n_pages = obj->size >> PAGE_SHIFT;
++	long n_pages __maybe_unused = obj->size >> PAGE_SHIFT;
+ 	struct page **pages;
+ 
+ 	pages = vgem_pin_pages(bo);
+@@ -296,8 +296,13 @@ static int vgem_prime_pin(struct drm_gem_object *obj)
+ 
+ 	/* Flush the object from the CPU cache so that importers can rely
+ 	 * on coherent indirect access via the exported dma-address.
++	 * drm_clflush_pages() only does that on x86 and powerpc; elsewhere
++	 * it just logs "Architecture has no drm_cache.c support" on every
++	 * pin. On arm64 the cache maintenance is done by dma_map_sg().
+ 	 */
++#if defined(CONFIG_X86) || defined(__powerpc__)
+ 	drm_clflush_pages(pages, n_pages);
++#endif
+ 
+ 	return 0;
+ }
